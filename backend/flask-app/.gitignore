@@ -1,0 +1,39 @@
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+env/
+venv/
+
+# Flask debug logs
+*.log
+
+# Environment variables
+.env
+.env.*
+
+# Cache and temporary files
+*.swp
+.DS_Store
+*.bak
+*.tmp
+
+# Python egg files
+*.egg
+*.egg-info/
+dist/
+build/
+
+# IDE configurations
+.idea/
+.vscode/
+
+# SSL certificates (if local)
+certs/
+
+# Docker-related
+*.pid
+.dockerignore
