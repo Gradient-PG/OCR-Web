@@ -7,7 +7,6 @@ image_bp = Blueprint('image', __name__)
 @image_bp.route('/image/<image_code>', methods=['GET'])
 def send_photo(image_code):
     try:
-
         image_data = get_image(image_code)
         if not image_data:
             return jsonify({"error": "No such a card in db"}), 400

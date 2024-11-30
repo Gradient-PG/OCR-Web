@@ -32,22 +32,27 @@ class TestPhotoRoutes(unittest.TestCase):
         mock_db['images'] = mock_collection
         mock_mongo_client.return_value = mock_db
 
-        image_code = "image_code.jpg"
         mock_collection.find = []
 
-        mock_file = FileStorage(
-            stream=io.BytesIO(b"fake image data"),
-            filename="test_new.png",
+        mock_file1 = FileStorage(
+            stream=io.BytesIO(b"fake image data 1"),
+            filename="test_image1.png",
             content_type="image/png"
         )
 
+        mock_file2 = FileStorage(
+            stream=io.BytesIO(b"fake image data 2"),
+            filename="test_image2.jpg",
+            content_type="image/jpeg"
+        )
+
         response = self.client.post(
-            f"/upload-image/{image_code}",
-            data={"file": mock_file},
+            "/upload-images",
+            data={"files": [mock_file1, mock_file2]},
             content_type="multipart/form-data"
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Photo successfully uploaded and linked to the card", response.json["message"])
+        self.assertIn("All items loaded successfully.", response.json["message"])
 
     @patch('app.core.db.MongoClient')
     @patch('os.getenv')
@@ -57,7 +62,6 @@ class TestPhotoRoutes(unittest.TestCase):
         mock_db['images'] = mock_collection
         mock_mongo_client.return_value = mock_db
 
-        image_code = "image_code.jpg"
         mock_collection.find = []
 
         mock_file = FileStorage(
@@ -66,8 +70,8 @@ class TestPhotoRoutes(unittest.TestCase):
         )
 
         response = self.client.post(
-            f"/upload-image/{image_code}",
-            data={"file": mock_file},
+            f"/upload-images",
+            data={"files": mock_file},
             content_type="multipart/form-data"
         )
         self.assertEqual(response.status_code, 415)
@@ -81,15 +85,14 @@ class TestPhotoRoutes(unittest.TestCase):
         mock_db['images'] = mock_collection
         mock_mongo_client.return_value = mock_db
 
-        image_code = "image_code.jpg"
         mock_collection.find = []
 
         response = self.client.post(
-            f"/upload-image/{image_code}",
+            f"/upload-images",
             content_type="multipart/form-data"
         )
         self.assertEqual(response.status_code, 400)
-        self.assertIn("No file provided", response.json["error"])
+        self.assertIn("No files provided", response.json["error"])
 
 if __name__ == "__main__":
     unittest.main()

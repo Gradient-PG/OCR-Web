@@ -5,7 +5,7 @@ from unittest.mock import patch, MagicMock
 from flask import Flask, json
 from app.card.views import card_bp
 from app.admin.views import admin_bp
-
+from bson import ObjectId
 
 def mock_getenv_side_effect(key, default=None):
     return {
@@ -26,10 +26,16 @@ class TestCardRoutes(unittest.TestCase):
     @patch("app.core.db.MongoClient")
     @patch("os.getenv")
     def test_upload__card_data(self, mock_getenv, mock_mongo_client):
-        personal_card_data = {
-            "name": "John",
-            "surname": "Doe21",
-        }
+        card_data = [
+            {
+                "name": "John",
+                "surname": "Doe21",
+            },
+            {
+                "name": "Mark",
+                "surname": "Sparrow",
+            }
+        ]
         mock_db = MagicMock()
         mock_collection = MagicMock()
         mock_db['cards'] = mock_collection
@@ -37,12 +43,12 @@ class TestCardRoutes(unittest.TestCase):
 
         response = self.client.post(
             "/upload-data",
-            data=json.dumps(personal_card_data),
+            data=json.dumps(card_data),
             content_type='application/json'
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Card successfully uploaded.", response.json["message"])
+        self.assertIn("All items loaded successfully.", response.json["message"])
 
     @patch("app.core.db.MongoClient")
     @patch("os.getenv")
@@ -60,11 +66,26 @@ class TestCardRoutes(unittest.TestCase):
     @patch("app.core.db.MongoClient")
     @patch("os.getenv")
     def test_correct_card_success(self, mock_getenv, mock_mongo_client):
-        correct_card_data = {"_id": "123", "name": "John", "surname": "Doe"}
+        correct_card_data = {
+            "_id": ObjectId("507f1f77bcf86cd799439011"),
+            "name": "John",
+            "surname": "Doe",
+            "correct": 1
+        }
+
+        mock_collection = MagicMock()
+        mock_collection.find_one.side_effect = lambda query: (
+            correct_card_data if query["_id"] == correct_card_data["_id"] else None
+        )
+        mock_collection.update_one.return_value = MagicMock(modified_count=1)
+
+        mock_db = MagicMock()
+        mock_db.__getitem__.return_value = mock_collection
+        mock_mongo_client.return_value.__getitem__.return_value = mock_db
 
         response = self.client.post(
             "/correct-card",
-            data=json.dumps(correct_card_data),
+            data=json.dumps({"_id": str(correct_card_data["_id"]), "name": "John", "surname": "Doe"}),
             content_type='application/json'
         )
 
@@ -73,7 +94,7 @@ class TestCardRoutes(unittest.TestCase):
 
     @patch("app.core.db.MongoClient")
     @patch("os.getenv")
-    def test_random_card_no_incorrect_cards(self, mock_getenv, mock_mongo_client):
+    def test_random_card_no_cards(self, mock_getenv, mock_mongo_client):
         mock_db = MagicMock()
         mock_collection = MagicMock()
         mock_db['cards'] = mock_collection
@@ -87,42 +108,41 @@ class TestCardRoutes(unittest.TestCase):
 
     @patch("app.core.db.MongoClient")
     @patch("os.getenv")
-    def test_upload_get_correct_random_card(self, mock_getenv, mock_mongo_client):
+    def test_upload_correct_random_card(self, mock_getenv, mock_mongo_client):
+        mock_getenv.side_effect = mock_getenv_side_effect
+
         mock_db = MagicMock()
         mock_collection = MagicMock()
         mock_db['cards'] = mock_collection
         mock_mongo_client.return_value = mock_db
-        mock_collection.find.return_value = []
 
-        card_data = {
+        mock_collection.insert_one.return_value = MagicMock(inserted_id=ObjectId("507f1f77bcf86cd799439011"))
+
+        card_data = [{
+            "_id": ObjectId("507f1f77bcf86cd799439011"),
             "name": "John",
             "surname": "Doe21",
-            "correct": False
-        }
-        mock_db = MagicMock()
-        mock_collection = MagicMock()
-        mock_db['cards'] = mock_collection
-        mock_mongo_client.return_value = mock_db
+            "correct": 0
+        }]
+        mock_collection.find.return_value = [card_data]
+        mock_collection.find_one.side_effect = lambda query: (
+            card_data if query["_id"] == card_data["_id"] else None
+        )
+        mock_collection.update_one.return_value = MagicMock(modified_count=1)
 
-        # Step 1: Upload the card
         response = self.client.post(
             "/upload-data",
-            data=json.dumps(card_data),
+            data=json.dumps([{"name": "John", "surname": "Doe21"}]),
             content_type='application/json'
         )
-
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Card successfully uploaded.", response.json["message"])
-
-        # correct card
-        correct_card_data = {"_id": "1", "name": "John", "surname": "Doe21"}
+        self.assertIn("All items loaded successfully.", response.json["message"])
 
         response = self.client.post(
             "/correct-card",
-            data=json.dumps(correct_card_data),
+            data=json.dumps({"_id": str(card_data[0]["_id"]), "name": "John", "surname": "Doe21"}),
             content_type='application/json'
         )
-
         self.assertEqual(response.status_code, 200)
         self.assertIn("Card marked as correct and updated.", response.json["message"])
 

@@ -3,9 +3,6 @@ import os
 import json
 import base64
 
-from app.core.mark_data import mark_incorrect
-
-
 def get_db():
     """Return a database connection to MongoDB"""
     try:
@@ -20,33 +17,24 @@ def get_db():
     except Exception as e:
         raise
 
-
-def load_card_to_db(json_data):
+def get_card_correctness(_id):
     db = get_db()
     collection = db['cards']
-    try:
-        if json_data.get("_id"):
-            existing_card = collection.find_one({"_id": json_data.get("_id")})
 
-            if existing_card:
-                print(f"Card with _id {json_data.get('_id')} already exists. Skipping insertion.")
-                return {"error": f"Card with the same _id already exists: {json_data.get('_id')}"}, 400
+    card = collection.find_one({"_id": _id})
 
-        mark_incorrect(json_data)
-        result = collection.insert_one(json_data)
-        print(f"Data inserted with ID: {result.inserted_id}")
+    if not card:
+        return {"error": "Card not found."}
 
-        return {"message": "Card successfully uploaded."}, 200
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return {"error": f"An error occurred: {str(e)}"}, 500
+    return int(card["correct"])
 
-def get_correct_cards():
-    db = get_db()
-    collection = db['cards']
-    try:
-        correct_cards = collection.find({"correct": True})
-        return list(correct_cards)
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return {"error": f"An error occurred: {str(e)}"}
+
+def mark_checked(data):
+    correct_num = get_card_correctness(data["_id"])
+    data['correct'] = int(correct_num) + 1
+    print(data)
+    print(f"Marked as correct: {data}")
+
+
+def mark_unchecked(data):
+    data['correct'] = 0
