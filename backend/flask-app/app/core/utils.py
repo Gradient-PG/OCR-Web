@@ -2,7 +2,6 @@ import json
 from bson import json_util
 from bson.objectid import ObjectId
 
-
 def parse_json(data):
     if isinstance(data, dict):
         for key, value in data.items():

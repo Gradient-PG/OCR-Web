@@ -26,10 +26,16 @@ class TestCardRoutes(unittest.TestCase):
     @patch("app.core.db.MongoClient")
     @patch("os.getenv")
     def test_upload__card_data(self, mock_getenv, mock_mongo_client):
-        personal_card_data = {
-            "name": "John",
-            "surname": "Doe21",
-        }
+        card_data = [
+            {
+                "name": "John",
+                "surname": "Doe21",
+            },
+            {
+                "name": "Mark",
+                "surname": "Sparrow",
+            }
+        ]
         mock_db = MagicMock()
         mock_collection = MagicMock()
         mock_db['cards'] = mock_collection
@@ -37,12 +43,12 @@ class TestCardRoutes(unittest.TestCase):
 
         response = self.client.post(
             "/upload-data",
-            data=json.dumps(personal_card_data),
+            data=json.dumps(card_data),
             content_type='application/json'
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Card successfully uploaded.", response.json["message"])
+        self.assertIn("All items loaded successfully.", response.json["message"])
 
     @patch("app.core.db.MongoClient")
     @patch("os.getenv")
@@ -112,12 +118,12 @@ class TestCardRoutes(unittest.TestCase):
 
         mock_collection.insert_one.return_value = MagicMock(inserted_id=ObjectId("507f1f77bcf86cd799439011"))
 
-        card_data = {
+        card_data = [{
             "_id": ObjectId("507f1f77bcf86cd799439011"),
             "name": "John",
             "surname": "Doe21",
             "correct": 0
-        }
+        }]
         mock_collection.find.return_value = [card_data]
         mock_collection.find_one.side_effect = lambda query: (
             card_data if query["_id"] == card_data["_id"] else None
@@ -126,15 +132,15 @@ class TestCardRoutes(unittest.TestCase):
 
         response = self.client.post(
             "/upload-data",
-            data=json.dumps({"name": "John", "surname": "Doe21"}),
+            data=json.dumps([{"name": "John", "surname": "Doe21"}]),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn("Card successfully uploaded.", response.json["message"])
+        self.assertIn("All items loaded successfully.", response.json["message"])
 
         response = self.client.post(
             "/correct-card",
-            data=json.dumps({"_id": str(card_data["_id"]), "name": "John", "surname": "Doe21"}),
+            data=json.dumps({"_id": str(card_data[0]["_id"]), "name": "John", "surname": "Doe21"}),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, 200)

@@ -1,6 +1,34 @@
 import base64
 from app.core.db import get_db
 
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def load_images(files):
+    all_success = True
+    for file in files:
+        if file.filename == '' or not allowed_file(file.filename):
+            return {"error": "Invalid file type or no file selected"}, 415
+
+        image_code = file.filename
+
+        try:
+            response, status_code = load_image_to_db(file, image_code)
+            if status_code != 200:
+                all_success = False
+        except Exception as e:
+            print(f"Exception occurred for {file.filename}: {e}")
+            all_success = False
+
+
+    if all_success:
+        return {"message": "All items loaded successfully."}, 200
+    else:
+        return {"message": "Some items failed to load."}, 400
+
 def load_image_to_db(file, image_code):
     db = get_db()
     collection = db['images']

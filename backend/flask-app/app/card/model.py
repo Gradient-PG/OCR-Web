@@ -1,6 +1,21 @@
 from bson import ObjectId
 from app.core.db import get_db
 
+def load_cards(data):
+    """Upload group of cards"""
+    all_success = True
+    for item in data:
+        try:
+            response, status_code = load_card_to_db(item)
+            if status_code != 200:
+                all_success = False
+        except Exception as e:
+            all_success = False
+
+    if all_success:
+        return {"message": "All items loaded successfully."}, 200
+    else:
+        return {"message": "Some items failed to load."}, 400
 
 def load_card_to_db(json_data):
     """Insert a card into the database"""
