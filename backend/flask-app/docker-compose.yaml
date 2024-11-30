@@ -6,13 +6,16 @@ services:
       - "5000:5000"
     volumes:
       - ./app:/app
+      - ./certs:/certs
     environment:
       - MONGO_HOST=mongodb
       - MONGO_PORT=27017
       - MONGO_USER=root
       - MONGO_PASS=pass
+      - SSL_CERT_PATH=/certs/cert.pem
+      - SSL_KEY_PATH=/certs/key.pem
     command: >
-      sh -c "flask --app . run --debug --host=0.0.0.0"
+      sh -c "flask --app . run --debug --host=0.0.0.0 --cert=/certs/cert.pem --key=/certs/key.pem"
       
 
   mongodb:
