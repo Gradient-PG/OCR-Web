@@ -1,10 +1,11 @@
+import datetime
 import string
 import random
 import bcrypt
 from app.core.db import get_db
 
 
-def password_generator(length=8, symbols=False):
+def password_generator(length=10, symbols=False):
     characters = string.ascii_letters + string.digits
     if symbols:
         characters += string.punctuation
@@ -30,6 +31,6 @@ def create_user(data):
 
     data['password'] = hashed_password
     data['is_super_user'] = False
-
+    data['created_at'] = datetime.datetime.now()
     collection.insert_one(data)
     return password

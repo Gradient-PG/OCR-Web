@@ -54,7 +54,7 @@ def add_user():
             return jsonify({"message": "user with this login already exists"}), 400
 
         password = create_user(data)
-        return {"message": f"user added sucessfully!", "password": password}, 200
+        return {"message": f"user added sucessfully!"}, 200
     except Exception as e:
         return jsonify({"message": f"Failed to add user: {str(e)}"}), 500
 
