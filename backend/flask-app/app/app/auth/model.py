@@ -1,3 +1,5 @@
+import datetime
+
 from bcrypt import checkpw
 from app.core.db import get_db
 
@@ -18,6 +20,23 @@ def password_correct(login, password):
     user = collection.find_one({"login": login})
 
     if checkpw(password.encode('utf-8'), user['password']):
+        return True
+    else:
+        return False
+
+def has_password_expired(login):
+    db = get_db()
+    collection = db['users']
+    user = collection.find_one({"login": login})
+    user_created_at = user['created_at']
+
+    current_time = datetime.datetime.now()
+    time_difference = current_time - user_created_at
+
+    if time_difference >= datetime.timedelta(hours=4):
+        collection.update_one(
+            {"login": login},
+            {"$unset": {"password": ""}})
         return True
     else:
         return False

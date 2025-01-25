@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint, session
 from app.auth.model import user_exists, password_correct
-from app.auth.model import is_admin
+from app.auth.model import is_admin, has_password_expired
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -36,6 +36,9 @@ def auth_login():
 
     if password_correct(data['login'], data['password']):
         session['user'] = data['login']
+
+        if has_password_expired(data['login']):
+            return jsonify({"message": "Password expired, provide email for a new one"}), 401
 
         return jsonify({"message": "Sucessfully logged in."}), 200
     else:
