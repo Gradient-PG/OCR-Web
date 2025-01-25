@@ -34,3 +34,24 @@ def create_user(data):
     data['created_at'] = datetime.datetime.now()
     collection.insert_one(data)
     return password
+
+def regenerate_user_password(user_id):
+    db = get_db()
+    collection = db['users']
+
+    user = collection.find_one({'_id': user_id})
+
+    if user is None:
+        return "User not found"
+
+    password = password_generator()
+
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
+
+    collection.update_one(
+        {'_id': user_id},
+        {'$set': {'password': hashed_password, 'created_at': datetime.datetime.now()}}
+    )
+
+    return password
