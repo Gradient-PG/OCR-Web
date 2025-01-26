@@ -10,8 +10,7 @@ export default {
       jsonFileName: "",
       imageFileNames: [],
       admin: true,
-      login: null,
-      password: null,
+      mail: null,
     };
   },
   methods: {
@@ -104,9 +103,6 @@ export default {
     goToInstruction() {
       this.$router.push({name: "instruction"});
     },
-    goToAgreement() {
-      this.$router.push({name: "agreement"});
-    },
     goToCardsPanel() {
       this.$router.push({name: "cards"});
     },
@@ -115,7 +111,7 @@ export default {
         const response = await axios.post(
           '/api/admin/add-user',
           {
-            login: this.login,
+            login: this.mail,
           },
           {
             headers: {
@@ -123,8 +119,7 @@ export default {
             },
           },
         )
-        console.log(response)
-        this.password = response.data.password;
+        alert(response)
       }
       catch (error) {
         console.error(error);
@@ -207,16 +202,12 @@ export default {
               id="userUpload"
               type="text"
               class="form-control"
-              placeholder="Login"
-              v-model="login"
+              placeholder="Email"
+              v-model="mail"
             >
             <button type="submit" class="btn btn-success">Dodaj</button>
           </div>
         </form>
-
-        <h3 v-if="password" class="text-center mt-3">
-          Hasło: {{ password }}
-        </h3>
       </div>
 
     </div>

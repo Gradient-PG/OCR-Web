@@ -53,13 +53,10 @@ def add_user():
         if user_exists(data):
             return jsonify({"message": "user with this login already exists"}), 400
 
-        password = create_user(data)
+        create_user(data)
         return {"message": f"user added sucessfully!"}, 200
     except Exception as e:
         return jsonify({"message": f"Failed to add user: {str(e)}"}), 500
-
-
-
 
 @admin_bp.route('/cards', methods=['GET'])
 @admin_required

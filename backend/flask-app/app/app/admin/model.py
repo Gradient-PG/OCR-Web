@@ -3,6 +3,8 @@ import string
 import random
 import bcrypt
 from app.core.db import get_db
+from app import mail
+from flask_mail import Message
 
 
 def password_generator(length=10, symbols=False):
@@ -25,33 +27,51 @@ def create_user(data):
     db = get_db()
     collection = db['users']
 
-    password = password_generator()
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-
-    data['password'] = hashed_password
+    data['password'] = ''
     data['is_super_user'] = False
     data['created_at'] = datetime.datetime.now()
     collection.insert_one(data)
-    return password
 
-def regenerate_user_password(user_id):
+def generate_user_password(login):
     db = get_db()
     collection = db['users']
-
-    user = collection.find_one({'_id': user_id})
+    user = collection.find_one({'login': login})
 
     if user is None:
-        return "User not found"
+        return False
 
+    email = user['login']
     password = password_generator()
 
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
 
     collection.update_one(
-        {'_id': user_id},
+        {'login': login},
         {'$set': {'password': hashed_password, 'created_at': datetime.datetime.now()}}
     )
 
-    return password
+    send_password_mail(email, password)
+
+    return True
+
+def send_password_mail(email, password):
+    msg = Message(
+        subject='Hasło do konta w OCR-PCK.',
+        sender='2eed70cdc0cea3',
+        recipients=[email]
+    )
+    msg.body = f"""
+                Szanowni Państwo,
+                
+                Witamy serdecznie w naszym programie! Dziękujemy za dołączenie i udział. Z radością informujemy, że hasło do Twojego konta zostało utworzone.
+                
+                Hasło: {password}
+                
+                Prosimy o zachowanie tego hasła w bezpiecznym miejscu. W razie jakichkolwiek pytań lub wątpliwości, prosimy o kontakt.
+                
+                Z poważaniem,
+                Zespół OCR-PCK
+                """
+
+    mail.send(msg)

@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint, session
-from app.auth.model import user_exists, password_correct
-from app.auth.model import is_admin, has_password_expired
+from app.auth.model import user_exists, password_correct, is_admin, has_password_expired
+from app.admin.model import generate_user_password
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -48,3 +48,19 @@ def auth_login():
 def break_session():
     session.clear()
     return jsonify({"message": "Session ended"}), 200
+
+@auth_bp.route('/send-password', methods=['POST'])
+def send_password():
+    data = request.get_json()
+
+    if data is None or 'login' not in data:
+        return jsonify({"message": "Email incorrect."}), 401
+
+    if user_exists(data['login']) is False:
+        return jsonify({"message": "User not registered."}), 401
+
+    if generate_user_password(data['login']):
+        return jsonify({"message": "Password sent on provided email."}), 200
+    else:
+        return jsonify({"message": "There was a problem with sending password."}), 401
+

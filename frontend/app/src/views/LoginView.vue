@@ -6,7 +6,7 @@ import {getCSRFToken} from "@/scripts/utils.js";
 export default {
   data() {
     return {
-      login: null,
+      email: null,
       password: null,
       csrfToken: null,
       error: null,
@@ -18,7 +18,7 @@ export default {
         const response = await axios.post(
           '/api/auth/login',
           {
-            login: this.login,
+            login: this.email,
             password: this.password,
           },
           {
@@ -55,8 +55,8 @@ export default {
             }
             else{
               const errorData = await response.json();
-              console.error(errorData.error); // Log the error message
-              alert(errorData.error); // Show an alert with the error
+              console.error(errorData.error);
+              alert(errorData.error);
             }
           }
         }
@@ -91,11 +91,11 @@ export default {
         <h2 class="text-xl text-center my-4">ZALOGUJ SIĘ ABY KONTUNOWAĆ...</h2>
         <div class="d-flex flex-column align-items-center ">
           <input
-            placeholder="Login..."
+            placeholder="Email..."
             class="form-control w-75 p-3 mb-3"
-            type="text"
-            name="login"
-            v-model="login"
+            type="email"
+            name="email"
+            v-model="email"
           />
           <input
             placeholder="Haslo..."
@@ -105,6 +105,7 @@ export default {
             v-model="password"
           />
         </div>
+        <h5 class="text-center my-2">Jeśli nie masz jeszcze konta, napisz do [email]</h5>
         <h3 v-if="error" class="text-center my-4">{{ error }}</h3>
         <div class="align-items-center d-flex flex-column justify-content-between">
           <button class="btn btn-lg btn-primary w-50 mb-3" @click="goToAgreement">ZALOGUJ SIĘ</button>

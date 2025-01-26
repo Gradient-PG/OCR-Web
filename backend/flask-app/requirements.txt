@@ -7,3 +7,4 @@ flask-cors==5.0.0
 flask_wtf==1.2.2
 uwsgi==2.0.28
 flask-talisman== 1.1.0
+flask_mail==0.10.0

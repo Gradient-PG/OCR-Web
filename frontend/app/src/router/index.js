@@ -8,12 +8,18 @@ import Error404 from '../views/Error404View.vue'
 import AdminPanel from '../views/AdminPanel.vue'
 import CardsPanel from "@/views/CardsPanel.vue";
 import CardView from "@/views/CardView.vue";
+import WelcomeView from '@/views/WelcomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      name: 'WelcomeView',
+      component: WelcomeView
+    },
+    {
+      path: '/login',
       name: 'login',
       component: LoginView,
     },

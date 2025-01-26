@@ -28,6 +28,10 @@ def has_password_expired(login):
     db = get_db()
     collection = db['users']
     user = collection.find_one({"login": login})
+
+    if user['is_super_user']:
+        return False
+
     user_created_at = user['created_at']
 
     current_time = datetime.datetime.now()
