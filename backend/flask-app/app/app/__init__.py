@@ -74,11 +74,11 @@ def index(path):
     return render_template("index.html")
 
 
-# @app.after_request
-# def add_csrf_cookie(response):
-#     if response.status_code in range(200, 400) and not response.direct_passthrough:
-#         response.set_cookie("csrftoken", generate_csrf(), secure=True, samesite="Lax")
-#     return response
+@app.after_request
+def add_csrf_cookie(response):
+    if response.status_code in range(200, 400) and not response.direct_passthrough:
+        response.set_cookie("csrftoken", generate_csrf(), secure=True, samesite="Lax")
+    return response
 
 
 if __name__ == "__main__":

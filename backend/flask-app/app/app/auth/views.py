@@ -38,7 +38,7 @@ def auth_login():
         session['user'] = data['login']
 
         if has_password_expired(data['login']):
-            return jsonify({"message": "Password expired, provide email for a new one"}), 401
+            return jsonify({"message": "Password expired, provide email so you will be sent a new one"}), 401
 
         return jsonify({"message": "Sucessfully logged in."}), 200
     else:
