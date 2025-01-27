@@ -35,7 +35,7 @@ export default {
       <div class="card-body">
         <h1 class="text-center">Instrukcja</h1>
         <p class="text-justify fs-6 text-md-f">
-          Witamy w systemie digitalizacji kart Zasłużonych Honorowych Dawców Krwi Polskiego Czerwonego Krzyża.
+          Witamy w systemie ręcznej weryfikacji kart Zasłużonych Honorowych Dawców Krwi Polskiego Czerwonego Krzyża.
           <br><br>
           Po kliknięciu przycisku <b>"Przejdź dalej"</b> zostanie wyświetlony skan karty Zasłużonego Honorowego Dawcy Krwi 
           wraz z formularzem zawierającym automatycznie odczytane dane. Każde pole formularza jest oznaczone etykietą odpowiadającą oznaczeniom na karcie, 

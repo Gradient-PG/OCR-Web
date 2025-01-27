@@ -44,7 +44,7 @@ export default {
            style="height: 70vh; overflow-y: auto;">
         <h1 class="text-center">Umowa o zachowaniu poufności</h1>
         <p class="text-justify fs-6 text-md-f">
-          <h4> Umowa o zachowaniu poufności w procesie ręcznej weryfikacji kart Zasłużonych Honorowych Dawców Krwi </h4>
+          <h4> Umowa o zachowaniu poufności w procesie ręcznej weryfikacji kart Zasłużonych Honorowych Dawców Krwi Polskiego Czerwonego Krzyża </h4>
           <h5> Identyfikacja Stron </h5>
           - <b>Administrator Danych</b>: Polski Czerwony Krzyż z siedzibą w Warszawie (00-561) przy ul. Mokotowskiej 14, iod@pck.pl
           <br>
