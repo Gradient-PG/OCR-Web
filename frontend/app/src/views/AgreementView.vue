@@ -48,29 +48,32 @@ export default {
           <h5> Identyfikacja Stron </h5>
           - <b>Administrator Danych</b>: Polski Czerwony Krzyż z siedzibą w Warszawie (00-561) przy ul. Mokotowskiej 14, iod@pck.pl
           <br>
-          - <b>Weryfikator</b>: [Imię i nazwisko, adres email]
+          - <b>Weryfikator</b>: [adres email]
           <br> <br>
           <h5> Zakres i Cel </h5>
           Weryfikator przyjmuje do wiadomości, że: <br>
-          1. Jego zadaniem jest wyłącznie potwierdzenie zgodności zdigitalizowanych danych (numery PESEL, imiona i nazwiska, daty urodzenia, ilość oddanej krwi, stopnie przyznanych odznak) z zeskanowanymi kartami Zasłużonych Honorowych Dawców Krwi dostarczonymi przez Administratora Danych. <br>
-          2. Weryfikator nie nabywa żadnych praw do przechowywania, kopiowania lub wykorzystywania tych danych w celach innych niż wskazane powyżej.
+          1. Administrator Danych udostępnia Weryfikatorowi dane osobowe i upoważnia Weryfikatora do weryfikacji zgodności zdigitalizowanych danych osobowych (m.in. numery PESEL, imiona i nazwiska, daty urodzenia, ilość oddanej krwi, stopnie przyznanych odznak) z zeskanowanymi kartami Zasłużonych Honorowych Dawców Krwi. <br>
+          2. Zadadniem Weryfikatora jest wyłącznie potwierdzenie zgodności zdigitalizowanych danych osobowych z zeskanowanymi kartami Zasłużonych Honorowych Dawców Krwi dostarczonymi przez Administratora Danych. <br>
+          3. Weryfikator nie nabywa żadnych praw do przechowywania, kopiowania lub wykorzystywania tych danych w celach innych niż wskazane powyżej.
           <br> <br>
           <h5> Obowiązki Weryfikatora </h5>
           Weryfikator zobowiązuje się do: <br>
           1. Wykorzystywania udostępnionych danych osobowych wyłącznie w procesie weryfikacji zgodnie z instrukcjami Administratora Danych. <br>
           2. Zachowania danych w ścisłej poufności i nieujawniania ich osobom trzecim. <br>
-          3. Nie kopiowania, zapisywania ani przechowywania danych w żadnej formie poza zatwierdzonym procesem weryfikacji. <br>
+          3. Nie kopiowania, zapisywania, przechowywania, ani wykorzystywania danych w żadnej formie poza zatwierdzonym procesem weryfikacji. <br>
           4. Zwrócenia lub usunięcia wszystkich danych po zakończeniu weryfikacji, zgodnie z instrukcjami Administratora Danych.
           <br> <br>
           <h5> Zasady RODO </h5>
           Weryfikator przyjmuje do wiadomości zasady <a href="https://uodo.gov.pl/pl/404" target="_blank" rel="noopener noreferrer">RODO</a>, w tym: <br>
-          1. Przetwarzanie danych zgodnie z prawem, w sposób rzetelny i przejrzysty (<b>Art. 5 RODO</b>). <br>
-          2. Utrzymanie poufności i integralności danych osobowych (<b>Art. 32 RODO</b>).
+          1. Dane osobowe udostępnione przez Administratora Danych są poufne i nie mogą być ujawniane osobom trzecim, ani przekazywane do innych podmiotów, kopiowane, zapisywane, przechowywane, ani wykorzystywane poza zatwierdzonym procesem weryfikacji. <br>
+          2. Przetwarzanie danych przez Weryfikatora musi być zgodne z prawem, w sposób rzetelny i przejrzysty. <br>
+          3. Utrzymanie poufności i integralności danych osobowych.
           <br> <br>
           <h5> Konsekwencje naruszenia </h5>
           Naruszenie warunków niniejszej umowy może skutkować: <br>
           1. Natychmiastowym zakończeniem współpracy w ramach procesu weryfikacji. <br>
           2. Podjęciem działań prawnych na podstawie obowiązujących przepisów dotyczących ochrony danych osobowych, w tym kar wynikających z RODO.
+          3. Żądaniem od Weryfikatora odszkodowania za szkody wynikające z naruszenia umowy.
           <br> <br>
           <h5> Potwierdzenie </h5>
           Podpisując tę umowę, Weryfikator potwierdza zrozumienie i akceptację opisanych powyżej obowiązków i zobowiązań.
