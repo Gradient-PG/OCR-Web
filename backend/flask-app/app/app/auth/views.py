@@ -54,10 +54,10 @@ def send_password():
     data = request.get_json()
 
     if data is None or 'login' not in data:
-        return jsonify({"message": "Email incorrect."}), 401
+        return jsonify({"message": "Podano nieprawidłowy email."}), 401
 
     if user_exists(data['login']) is False:
-        return jsonify({"message": "User not registered."}), 401
+        return jsonify({"message": "Podany email nie został zarejestrowany."}), 401
 
     if generate_user_password(data['login']):
         return jsonify({"message": "Password sent on provided email."}), 200

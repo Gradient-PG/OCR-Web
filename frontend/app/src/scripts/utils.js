@@ -1,5 +1,5 @@
 import axios from "axios";
-import {globalState} from "@/scripts/store.js";
+import { globalState } from "@/scripts/store.js";
 
 export async function checkSession(router) {
   try {
@@ -10,12 +10,37 @@ export async function checkSession(router) {
       },
     })
     if (response.status !== 200) {
-      router.push({name: 'login'})
+      globalState.isAuthenticated = false;
+      localStorage.setItem('isAuthenticated', 'false');
+      router.push({ name: 'welcome' });
     }
     else
       return false;
   } catch {
-    router.push({name: 'login'})
+    globalState.isAuthenticated = false;
+    localStorage.setItem('isAuthenticated', 'false');
+    router.push({name: 'welcome'})
+  }
+}
+
+export async function checkSessionLogin(router) {
+  try {
+    const response = await axios.get('/api/auth/session', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (response.status === 200) {
+      router.push({name: 'instruction'})
+    }
+    else {
+      return true;
+    }
+  }
+  catch {
+    return true;
   }
 }
 

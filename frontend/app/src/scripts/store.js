@@ -1,5 +1,9 @@
-import { reactive } from 'vue'
+import { reactive, watch } from 'vue'
 
 export const globalState = reactive({
-  isAuthenticated: false,
+  isAuthenticated: localStorage.getItem('isAuthenticated') === 'true',
+})
+
+watch(() => globalState.isAuthenticated, (newValue) => {
+  localStorage.setItem('isAuthenticated', newValue)
 })

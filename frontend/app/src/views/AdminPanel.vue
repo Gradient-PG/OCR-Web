@@ -9,7 +9,7 @@ export default {
       uploadedImages: [],
       jsonFileName: "",
       imageFileNames: [],
-      admin: true,
+      admin: false,
       mail: null,
     };
   },
@@ -119,7 +119,7 @@ export default {
             },
           },
         )
-        alert(response)
+        alert(response.data.message);
       }
       catch (error) {
         console.error(error);

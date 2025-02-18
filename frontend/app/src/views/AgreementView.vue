@@ -8,12 +8,7 @@ export default {
     }
   },
   async mounted() {
-    try {
-      this.loading = await checkSession(this.$router);
-    } catch (error) {
-      console.error("An error occurred while checking agreement status:", error);
-      alert("An error occurred. Please reload the page or try again later.");
-    }
+    this.loading = await checkSession(this.$router);
   },
   methods: {
     async submitAgreement() {

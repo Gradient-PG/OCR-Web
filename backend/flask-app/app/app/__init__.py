@@ -19,7 +19,7 @@ db = get_db()
 app.config["SESSION_TYPE"] = "mongodb"
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "SECRET")
 app.config["SESSION_PERMANENT"] = True  # bo czas ustawiamy
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=1)
 app.config["SESSION_MONGODB"] = db.client
 app.config["SESSION_MONGODB_DB"] = db.name
 app.config["SESSION_MONGODB_COLLECT"] = "sessions"
@@ -47,10 +47,11 @@ talisman = Talisman(
     referrer_policy='strict-origin-when-cross-origin'
 )
 
-app.config['MAIL_SERVER'] = 'sandbox.smtp.mailtrap.io'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = '2eed70cdc0cea3'
-app.config['MAIL_PASSWORD'] = '854dae7cf8f650'
+app.config['MAIL_SERVER']='sandbox.smtp.mailtrap.io'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = '9f4526651cc32c'
+app.config['MAIL_PASSWORD'] = '2584c6d43448b7'
+app.config['MAIL_DEFAULT_SENDER'] = 'no-reply@demomailtrap.com'
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 

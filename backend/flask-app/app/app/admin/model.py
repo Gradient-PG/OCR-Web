@@ -3,7 +3,7 @@ import string
 import random
 import bcrypt
 from app.core.db import get_db
-from app import mail
+from app import app, mail
 from flask_mail import Message
 
 
@@ -58,7 +58,7 @@ def generate_user_password(login):
 def send_password_mail(email, password):
     msg = Message(
         subject='Hasło do konta w OCR-PCK.',
-        sender='2eed70cdc0cea3',
+        sender=app.config['MAIL_DEFAULT_SENDER'],
         recipients=[email]
     )
     msg.body = f"""

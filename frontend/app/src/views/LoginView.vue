@@ -1,8 +1,9 @@
 <script>
 import { globalState } from '@/scripts/store'
-import {adminCheckSession, checkSession} from "@/scripts/utils.js";
+import { adminCheckSession } from '@/scripts/utils.js'
 import axios from 'axios'
-import {getCSRFToken} from "@/scripts/utils.js";
+import { getCSRFToken } from '@/scripts/utils.js'
+import router from '@/router/index.js'
 export default {
   data() {
     return {
@@ -30,37 +31,35 @@ export default {
         if (response.status === 200) {
           globalState.isAuthenticated = true
 
-          this.admin = await adminCheckSession(this.$router);
+          this.admin = await adminCheckSession(this.$router)
 
           if (this.admin) {
-            this.$router.push({name: 'admin'})
+            this.$router.push({ name: 'admin' })
           } else {
-            const response = await fetch("/api/agreement/contract", {
-              method: "GET",
+            const response = await fetch('/api/agreement/contract', {
+              method: 'GET',
               headers: {
                 'X-CSRF-TOKEN': getCSRFToken(),
               },
-            }
-          );
+            })
 
             if (response.ok) {
-              const data = await response.json();
-              if (data.message === "You have already agreed to the contract.") {
-                this.$router.push({ name: "instruction" });
-                return;
+              const data = await response.json()
+              if (data.message === 'You have already agreed to the contract.') {
+                this.$router.push({ name: 'instruction' })
+                return
               }
-              if (data.message === "You have not agreed to the contract yet.") {
-                this.$router.push({ name: "agreement" });
+              if (data.message === 'You have not agreed to the contract yet.') {
+                this.$router.push({ name: 'agreement' })
               }
-            }
-            else{
-              const errorData = await response.json();
-              console.error(errorData.error);
-              alert(errorData.error);
+            } else {
+              const errorData = await response.json()
+              console.error(errorData.error)
+              alert(errorData.error)
             }
           }
         }
-      } catch(error) {
+      } catch (error) {
         console.error(error)
         this.error = error.response.data.message
       }
@@ -78,18 +77,27 @@ export default {
       )
 
       if (response.status === 200) {
-        alert(response.data.message);
+        alert(response.data.message)
       }
+    },
+  },
+  async mounted() {
+    if (globalState.isAuthenticated) {
+      console.log("Already authenticated, redirecting...")
+      await router.push({ name: 'instruction' })
     }
   },
 }
 </script>
 <template>
   <div class="d-flex justify-content-center align-items-center mt-5">
-    <div class="card border-light-subtle mb-3 mt-5" style="max-width: 70%; width: 100%; max-height: 60%; height: 100%;">
+    <div
+      class="card border-light-subtle mb-3 mt-5"
+      style="max-width: 70%; width: 100%; max-height: 60%; height: 100%"
+    >
       <div class="card-body p-3 d-flex flex-column justify-content-between">
         <h2 class="text-xl text-center my-4">ZALOGUJ SIĘ ABY KONTUNOWAĆ...</h2>
-        <div class="d-flex flex-column align-items-center ">
+        <div class="d-flex flex-column align-items-center">
           <input
             placeholder="Email..."
             class="form-control w-75 p-3 mb-3"
@@ -108,8 +116,12 @@ export default {
         <h5 class="text-center my-2">Jeśli nie masz jeszcze konta, napisz do [email]</h5>
         <h3 v-if="error" class="text-center my-4">{{ error }}</h3>
         <div class="align-items-center d-flex flex-column justify-content-between">
-          <button class="btn btn-lg btn-primary w-50 mb-3" @click="goToAgreement">ZALOGUJ SIĘ</button>
-          <button class="btn btn-lg btn-info text-white w-50 mb-3" @click="makeAdmin">CREATE ADMIN </button>
+          <button class="btn btn-lg btn-primary w-50 mb-3" @click="goToAgreement">
+            ZALOGUJ SIĘ
+          </button>
+          <button class="btn btn-lg btn-info text-white w-50 mb-3" @click="makeAdmin">
+            CREATE ADMIN
+          </button>
         </div>
       </div>
     </div>
@@ -123,7 +135,7 @@ export default {
   }
 }
 
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   div.card {
     height: 40% !important;
   }
@@ -141,6 +153,5 @@ export default {
     width: 100% !important;
     margin: 5px !important;
   }
-
 }
 </style>

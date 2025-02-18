@@ -1,5 +1,6 @@
 <script>
 import {checkSession} from "@/scripts/utils.js";
+import router from '@/router/index.js'
 
 export default {
   data() {
@@ -8,7 +9,7 @@ export default {
     }
   },
   async mounted() {
-    this.loading = await checkSession();
+    this.loading = await checkSession(router);
   }
 }
 </script>
