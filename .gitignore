@@ -38,3 +38,5 @@ backend/flask-app/.idea
 
 .env
 
+*__pycache__*
+

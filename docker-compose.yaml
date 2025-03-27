@@ -1,4 +1,3 @@
-
 services:
   app:
     build:
@@ -25,6 +24,52 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: pass
     ports:
       - "27017:27017"
+
+  donut_service:
+    build:
+      context: ./donut_service
+    ports:
+      - "8000:80"
+    volumes:
+      - ./donut_service/app:/app
+    command: >
+      sh -c "uvicorn app.main:app --host 0.0.0.0 --port 80"
+
+  redis:
+    image: redis:7
+
+  donut_worker:
+    build:
+      context: ./donut_service
+    command: celery -A src.worker.celery worker --pool=prefork --concurrency=1
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - NVIDIA_VISIBLE_DEVICES=1
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      - donut_service
+      - redis
+
+  dashboard:
+    build:
+      context: ./donut_service
+    command: celery --broker=redis://redis:6379/0 flower --port=5555
+    ports:
+      - 5556:5555
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - donut_service
+      - redis
 
 volumes:
   dev-data:
