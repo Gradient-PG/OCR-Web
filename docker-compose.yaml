@@ -41,7 +41,7 @@ services:
   donut_worker:
     build:
       context: ./donut_service
-    command: celery -A src.worker.celery worker --pool=prefork --concurrency=1
+    command: celery -A donut_service.app.worker worker --pool=prefork --concurrency=1
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
