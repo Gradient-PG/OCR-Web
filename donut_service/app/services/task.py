@@ -13,8 +13,6 @@ class TaskService:
     Allows creating tasks, getting their status and results
 
     """
-    # static field to be accessed from any instance
-    # frameworks = {}
 
     def __init__(self):
         self.task_repository = TaskRepository()

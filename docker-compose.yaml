@@ -32,6 +32,12 @@ services:
       - "8000:80"
     volumes:
       - ./donut_service/app:/app
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_USER=root
+      - MONGO_PASS=pass
+      - SECRET_KEY=SECRET
     command: >
       sh -c "uvicorn app.main:app --host 0.0.0.0 --port 80"
 
@@ -41,7 +47,7 @@ services:
   donut_worker:
     build:
       context: ./donut_service
-    command: celery -A donut_service.app.worker worker --pool=prefork --concurrency=1
+    command: celery -A app.worker worker --pool=prefork --concurrency=1
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0

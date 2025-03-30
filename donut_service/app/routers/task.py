@@ -8,12 +8,13 @@ router = APIRouter(
     responses={404: {'description': 'Not found'}},
 )
 
-# TODO change to dependency injection
-task_service = TaskService()
+# Dependency function to provide TaskService
+def get_task_service() -> TaskService:
+    return TaskService()
 
 
 @router.get('/status/{task_id}', summary='Task status', description='Returns a task status')
-async def status(task_id: str):
+async def status(task_id: str, task_service: TaskService = Depends(get_task_service)):
     """Endpoint to fetch the status of a task.
 
     in: task_id
