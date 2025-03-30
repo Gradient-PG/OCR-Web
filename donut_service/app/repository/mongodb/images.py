@@ -3,6 +3,7 @@ from bson.objectid import ObjectId
 import gridfs
 from app.entity.image import ImageEntity
 import os
+import logging
 
 class ImageRepository:
     def __init__(self, database_name="donut_service_database"):
@@ -37,7 +38,7 @@ class ImageRepository:
                 try:
                     self.fs.delete(ObjectId(existing_image_id))
                 except Exception as e:
-                    print(f"Error deleting existing image data: {e}")
+                    logging.error(f"Error deleting existing image data: {e}")
             self.collection.delete_one({"image_name": image.image_name})
 
         # Save the new image data to GridFS
@@ -109,7 +110,7 @@ class ImageRepository:
                     metadata=metadata
                 ))
             except Exception as e:
-                print(f"Error retrieving image with ID {image_id}: {e}")
+                logging.error(f"Error retrieving image with ID {image_id}: {e}")
         return images
 
     def delete_image(self, image_id: str) -> bool:
@@ -128,5 +129,5 @@ class ImageRepository:
 
             return True
         except Exception as e:
-            print(f"Error deleting image: {e}")
+            logging.error(f"Error deleting image: {e}")
             return False
