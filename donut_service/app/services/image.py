@@ -1,9 +1,9 @@
 from typing import List
 from fastapi import UploadFile
-from ..repository.mongodb.images import ImageRepository
+from ..repository.mongodb.image import ImageRepository
 from ..entity.image import ImageEntity
 
-class ImagesService:
+class ImageService:
 
     def __init__(self, image_repository: ImageRepository):
         self.image_repository = image_repository
