@@ -6,6 +6,9 @@ from fastapi.logger import logger
 
 from .routers import (
     dataset,
+    augmentation,
+    training,
+    labeling,
 )
 
 # TODO: set LOG_LEVEL in Dockerfile/docker-compose
@@ -25,3 +28,6 @@ app = FastAPI(
 )
 
 app.include_router(dataset.router)
+app.include_router(augmentation.router)
+app.include_router(training.router)
+app.include_router(labeling.router)

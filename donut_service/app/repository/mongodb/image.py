@@ -67,29 +67,6 @@ class ImageRepository:
             image_ids.append(image_id)
         return image_ids
 
-    def get_image(self, image_id: str) -> ImageEntity:
-        """
-        Retrieve an image and its metadata from MongoDB.
-
-        :param image_id: The ID of the image to retrieve.
-        :return: An ImageEntity object containing the image data and metadata.
-        """
-        # Retrieve the image data from GridFS
-        image_data = self.fs.get(ObjectId(image_id)).read()
-
-        # Retrieve the metadata from the metadata collection
-        metadata = self.collection.find_one({"image_id": image_id})
-        if metadata:
-            metadata.pop("_id", None)  # Remove the MongoDB internal ID
-        else:
-            metadata = {}
-
-        return ImageEntity(
-            image_name=metadata.get("image_name", "unknown"),
-            image_data=image_data,
-            metadata=metadata
-        )
-
     def get_all_images(self) -> list[ImageEntity]:
         """
         Retrieve all images and their metadata from MongoDB.
@@ -112,22 +89,3 @@ class ImageRepository:
             except Exception as e:
                 logging.error(f"Error retrieving image with ID {image_id}: {e}")
         return images
-
-    def delete_image(self, image_id: str) -> bool:
-        """
-        Delete an image and its metadata from MongoDB.
-
-        :param image_id: The ID of the image to delete.
-        :return: True if the deletion was successful, False otherwise.
-        """
-        try:
-            # Delete the image data from GridFS
-            self.fs.delete(ObjectId(image_id))
-
-            # Delete the metadata from the metadata collection
-            self.collection.delete_one({"image_id": image_id})
-
-            return True
-        except Exception as e:
-            logging.error(f"Error deleting image: {e}")
-            return False

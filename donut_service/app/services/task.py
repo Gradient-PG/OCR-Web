@@ -1,8 +1,9 @@
 import logging
 
-from ..entity.task import TaskEntity, TaskResult, TaskStatus
+from ..entity.task import TaskEntity, TaskStatus, TaskType
 from ..repository.redis.task import TaskRepository
 from ..worker import create_task as worker_create_task
+from typing import Any
 
 DELAY = 60
 
@@ -14,10 +15,10 @@ class TaskService:
 
     """
 
-    def __init__(self):
-        self.task_repository = TaskRepository()
+    def __init__(self, task_repository: TaskRepository):
+        self.task_repository = task_repository
 
-    async def get_task(self, task_id: str) -> dict:
+    async def get_task(self, task_id: str) -> TaskEntity:
         """Retrieves task from the database.
 
         Args:
@@ -39,28 +40,29 @@ class TaskService:
             str: The current status of the task.
         """
         task = self.task_repository.get_task(task_id)
-        return task['status']
+        return task.status
 
-    async def get_task_result(self, task_id: str) -> TaskResult | None:
-        """Retrieves the result of a task from the database.
+    async def get_task_type(self, task_id: str) -> TaskType:
+        """Retrieves the type of a task from the database.
 
         Args:
             task_id (str): The unique identifier of the task.
 
         Returns:
-            str: The result of the task.
+            str: The type of the task.
         """
         task = self.task_repository.get_task(task_id)
-        return task['result']
+        return task.task_type
 
-    async def create_task(self, taskEntity: TaskEntity) -> str:
+    async def create_task(self, task_type: str, args: Any) -> str:
         """Creates and queues a new task, writes the TaskEntity to redis.
 
         Returns:
             str: The unique identifier of the newly created task.
         """
-        r = worker_create_task.delay(taskEntity.__dict__)
+        r = worker_create_task.delay({"task_type":task_type})
         task_id = r.task_id
+        self.task_repository.save_task_metadata(task_id, {"task_type": task_type})
 
         logging.info(f'{__file__} :: task id: {task_id}')
         return task_id

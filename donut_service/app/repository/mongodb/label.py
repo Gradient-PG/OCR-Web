@@ -41,9 +41,7 @@ class LabelRepository:
         Update an existing label by its image_code.
         """
         try:
-            print(label)
             label_data = label.to_dict()  # Convert LabelEntity to a dictionary
-            print(label_data)
             result = self.collection.update_one(
                 {"image_code": image_code}, {"$set": label_data}
             )
@@ -60,18 +58,6 @@ class LabelRepository:
         label_data = label.to_dict()  # Convert LabelEntity to a dictionary
         result = self.collection.insert_one(label_data)
         return str(result.inserted_id)
-
-    def delete_label(self, label_id: str) -> int:
-        """
-        Delete a label by its ID.
-        """
-        try:
-            result = self.collection.delete_one({"_id": ObjectId(label_id)})
-            if result.deleted_count == 0:
-                raise ValueError(f"Label with ID {label_id} not found.")
-            return result.deleted_count
-        except Exception as e:
-            raise ValueError(f"Invalid label ID: {label_id}") from e
 
     def get_all_labels(self) -> list:
         """

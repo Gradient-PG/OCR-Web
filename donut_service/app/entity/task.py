@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import List
 
 DATEFORMAT = '%Y-%m-%dT%H:%M:%S'
 
@@ -16,16 +17,8 @@ class TaskStatus(str, Enum):
     PENDING = 'pending'
     IN_PROGRESS = 'in_progress'
     COMPLETED = 'completed'
-
-class TaskResult(str, Enum):
-    """Binary task result enum
-
-    Implies either success or a failure
-    """
-
-    SUCCEED = 'succeed'
     FAILED = 'failed'
-
+    TIMEOUT = 'timeout'
 
 @dataclass
 class TaskEntity:
@@ -40,6 +33,5 @@ class TaskEntity:
     start_time: str
     end_time: str | None = None
     task_type: TaskType | None = None
-    args: str | None = None  # JSON serialized dict
     status: TaskStatus | None = None
-    result: TaskResult | None = None
+    result: List[dict] | None = None
