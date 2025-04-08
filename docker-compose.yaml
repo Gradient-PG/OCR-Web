@@ -38,8 +38,6 @@ services:
       - MONGO_USER=root
       - MONGO_PASS=pass
       - SECRET_KEY=SECRET
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     command: >
       sh -c "uvicorn app.main:app --host 0.0.0.0 --port 80"
 
@@ -53,7 +51,7 @@ services:
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - NVIDIA_VISIBLE_DEVICES=0
+      - NVIDIA_VISIBLE_DEVICES=1
       - NVIDIA_DRIVER_CAPABILITIES=compute,utility
     deploy:
       resources:

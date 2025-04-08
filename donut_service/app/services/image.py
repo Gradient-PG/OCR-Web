@@ -21,3 +21,7 @@ class ImageService:
 
     def get_all_images(self):
         return self.image_repository.get_all_images()
+    
+    def get_image_by_name(self, image_code):
+        return self.image_repository.get_image(image_code)
+        

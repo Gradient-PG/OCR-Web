@@ -28,7 +28,8 @@ async def create_task(
 ):
     """Endpoint to create a new task."""
     try:
-        task_id = await task_service.create_task('augmentation', requests)
+        image_codes = [request.image_code for request in requests]
+        task_id = await task_service.create_task('augmentation', image_codes)
         return {'task_id': task_id}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e

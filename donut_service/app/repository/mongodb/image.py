@@ -89,3 +89,37 @@ class ImageRepository:
             except Exception as e:
                 logging.error(f"Error retrieving image with ID {image_id}: {e}")
         return images
+    
+    def get_image(self, image_code: str) -> ImageEntity:
+        """
+        Retrieve a single image and its metadata from MongoDB by image_code.
+
+        :param image_code: The unique code (image_name) of the image to retrieve.
+        :return: An ImageEntity object containing the image data and metadata.
+        :raises ValueError: If the image is not found or an error occurs during retrieval.
+        """
+        try:
+            # Find the metadata for the given image_code
+            metadata = self.collection.find_one({"image_name": image_code})
+            if not metadata:
+                raise ValueError(f"Image with code '{image_code}' not found.")
+
+            # Retrieve the image data from GridFS using the image_id
+            image_id = metadata.get("image_id")
+            if not image_id:
+                raise ValueError(f"Image data for code '{image_code}' is missing.")
+
+            image_data = self.fs.get(ObjectId(image_id)).read()
+
+            # Remove the MongoDB internal ID from metadata
+            metadata.pop("_id", None)
+
+            # Return the image as an ImageEntity
+            return ImageEntity(
+                image_name=metadata.get("image_name", "unknown"),
+                image_data=image_data,
+                metadata=metadata
+            )
+        except Exception as e:
+            logging.error(f"Error retrieving image with code '{image_code}': {e}")
+            raise ValueError(f"Error retrieving image with code '{image_code}': {e}")

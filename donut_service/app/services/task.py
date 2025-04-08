@@ -2,7 +2,7 @@ import logging
 
 from ..entity.task import TaskEntity, TaskStatus, TaskType
 from ..repository.redis.task import TaskRepository
-from ..worker import create_task as worker_create_task
+from ..worker import augmentation_task as worker_augmentation_task
 from typing import Any
 
 DELAY = 60
@@ -60,7 +60,13 @@ class TaskService:
         Returns:
             str: The unique identifier of the newly created task.
         """
-        r = worker_create_task.delay({"task_type":task_type})
+        match task_type:
+            case 'augmentation':
+                r = worker_augmentation_task.delay({"image_codes": args})
+            case _:
+                raise ValueError(f"Unsupported task type: {task_type}")
+    
+    
         task_id = r.task_id
         self.task_repository.save_task_metadata(task_id, {"task_type": task_type})
 

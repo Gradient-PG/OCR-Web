@@ -40,6 +40,7 @@ async def upload_images(
 ):
     try:
         saved_image_ids = image_service.save_images(files)
+        print(saved_image_ids)
         return {"message": f"{len(files)} files uploaded", "image_ids": saved_image_ids}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
