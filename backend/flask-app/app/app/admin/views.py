@@ -107,26 +107,3 @@ def receive_correct_card():
         return jsonify({"message": "Card marked as correct and updated."}), 200
     else:
         return jsonify({"error": "Error updating card."}), 500
-
-
-# TEMPORARY FOR TESTING, WILL BE DELETED IN PROD VERSION
-from app.core.db import get_db
-import bcrypt
-@admin_bp.route('/temp-admin', methods=['POST'])
-def create_temp_admin():
-    db = get_db()
-    collection = db['users']
-
-    data = request.get_json()
-
-    password = 'admin'
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-
-    data['login'] = 'admin'
-    data['password'] = hashed_password
-    data['is_super_user'] = True
-
-    collection.insert_one(data)
-    return {"message": f"Admin created! Login: admin Password: admin"}, 200
-

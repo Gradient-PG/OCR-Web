@@ -12,7 +12,7 @@ export default {
       csrfToken: null,
       error: null,
     }
-  }, 
+  },
   methods: {
     async goToAgreement() {
       try {
@@ -64,22 +64,6 @@ export default {
         this.error = error.response.data.message
       }
     },
-    // TEMPORARY FOR TESTING, WILL BE DELETED IN PROD VERSION
-    async makeAdmin() {
-      const response = await axios.post(
-        '/api/admin/temp-admin',
-        {},
-        {
-          headers: {
-            'X-CSRF-TOKEN': getCSRFToken(),
-          },
-        },
-      )
-
-      if (response.status === 200) {
-        alert(response.data.message)
-      }
-    },
   },
   async mounted() {
     if (globalState.isAuthenticated) {
@@ -114,14 +98,6 @@ export default {
         </div>
         <h5 class="text-center my-2">Jeśli nie masz jeszcze konta, napisz do [email]</h5>
         <h3 v-if="error" class="text-center my-4">{{ error }}</h3>
-        <div class="align-items-center d-flex flex-column justify-content-between">
-          <button class="btn btn-lg btn-primary w-50 mb-3" @click="goToAgreement">
-            ZALOGUJ SIĘ
-          </button>
-          <button class="btn btn-lg btn-info text-white w-50 mb-3" @click="makeAdmin">
-            CREATE ADMIN
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -139,10 +115,6 @@ export default {
     height: 40% !important;
   }
 
-  button.btn.btn-lg {
-    font-size: 14px !important;
-    width: 100% !important;
-  }
 
   h2.text-xl {
     font-size: 18px !important;
